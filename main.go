@@ -17,7 +17,7 @@ func main() {
 	title := "Rimini 1991"
 
 	if err := doProcess(templFileName, dirname, title); err != nil {
-		log.Fatal(err)
+		log.Fatal("ERROR: ", err)
 	}
 	log.Printf("Done!")
 }
@@ -48,19 +48,20 @@ func doProcess(templFileName string, dirToScan string, title string) error {
 			log.Println("Add picture, ", pc)
 		}
 	}
-	println(toprocess)
-	return nil
 
 	ctx := struct {
 		Pictures []Picture
 		Title    string
-	}{}
+	}{
+		Pictures: toprocess,
+		Title:    title,
+	}
 	var partContent bytes.Buffer
-	tmplBodyMail := template.Must(template.New("MailBody").ParseFiles(templFileName))
-	if err := tmplBodyMail.ExecuteTemplate(&partContent, "mailbody", ctx); err != nil {
+	tmplBodyMail := template.Must(template.New("Body").ParseFiles(templFileName))
+	if err := tmplBodyMail.ExecuteTemplate(&partContent, "body", ctx); err != nil {
 		return err
 	}
-
+	log.Println("Result:", partContent.String())
 	return nil
 }
 

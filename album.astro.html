@@ -2,18 +2,17 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import PicComp from "../../components/SingleFoto.astro";
-
-{{ range .Pictures }}
-import pic{{.ImgNum}} from "../../images/{{.ImgName}}.jpg";
-{{end}}	
+{{ range .Pictures -}}
+import pic{{.ImgNum}} from "../../images/{{.ImgName}}";
+{{end -}}	
 ---
 
 <Layout pageTitle="{{.Title}}">
   <main>
     <ul role="list" class="link-card-grid">
-      {{ range .Pictures }}
+      {{ range .Pictures -}}
       <PicComp picToShow={pic{{.ImgNum}}} />
-      {{end}}	
+      {{end -}}	
     </ul>
   </main>
 </Layout>
