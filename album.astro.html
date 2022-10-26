@@ -3,7 +3,7 @@
 import Layout from "../../layouts/Layout.astro";
 import PicComp from "../../components/SingleFoto.astro";
 {{ range .Pictures -}}
-import pic{{.ImgNum}} from "../../images/{{.ImgName}}";
+import pic{{.ImgNum}} from "../../images/{{.FolderName}}/{{.ImgName}}";
 {{end -}}	
 ---
 

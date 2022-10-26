@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"path"
 	"strconv"
 	"strings"
 	"text/template"
@@ -23,13 +24,18 @@ func main() {
 }
 
 type Picture struct {
-	ImgNum  string
-	ImgName string
+	ImgNum     string
+	ImgName    string
+	FolderName string
 }
 
 func doProcess(templFileName string, dirToScan string, title string) error {
 	// NOTE: files should be *.jpg and not *.JPG. Use a cmd window and ren *.JPG *.jpg
 	log.Println("Scan directory: ", dirToScan)
+	dirToScan = path.Clean(dirToScan)
+	dirToScan = strings.ReplaceAll(dirToScan, "\\", "/")
+	dirbase, dirnamelast := path.Split(dirToScan)
+	log.Println("Normalizing dir: ", dirbase, dirnamelast)
 	files, err := ioutil.ReadDir(dirToScan)
 	if err != nil {
 		return err
@@ -38,7 +44,8 @@ func doProcess(templFileName string, dirToScan string, title string) error {
 	for _, ffInfo := range files {
 		if !ffInfo.IsDir() {
 			pc := Picture{
-				ImgName: ffInfo.Name(),
+				ImgName:    ffInfo.Name(),
+				FolderName: dirnamelast,
 			}
 			if err := setNumberField(&pc); err != nil {
 				return err
@@ -72,6 +79,7 @@ func doProcess(templFileName string, dirToScan string, title string) error {
 }
 
 func setNumberField(pc *Picture) error {
+	// expect P1000453.jpg and set 453 in ImgNum
 	nn := pc.ImgName
 	arr := strings.Split(nn, ".")
 	nn2 := strings.Replace(arr[0], "P1", "", 1)
