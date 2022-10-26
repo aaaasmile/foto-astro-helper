@@ -62,6 +62,12 @@ func doProcess(templFileName string, dirToScan string, title string) error {
 		return err
 	}
 	log.Println("Result:", partContent.String())
+
+	outfname := "out.astro"
+	if err := ioutil.WriteFile(outfname, partContent.Bytes(), 644); err != nil {
+		return err
+	}
+	log.Println("File created ", outfname)
 	return nil
 }
 
